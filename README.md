@@ -46,5 +46,3 @@ Other Contributors: Andrew Gao, Ayyazul Hassan, Kieu Vi O'Brien
 - Motor setup w/ L298N motor drivers & DC motors
 - Defines forward, backward, and stop functions for each motor
 - Used for testing individual motor functionality
-
-## Media
