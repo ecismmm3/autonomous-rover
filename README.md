@@ -34,8 +34,16 @@
 
 ## Files
 
-```main.py```: runs the entire robot in a single unified script: servo sweep, ultrasonic radar display, motor control with automatic obstacle detection, and LCD distance readout all running concurrently via Python threading. Everything lives in one file because GPIO pins can only be claimed by one process at a time. Running two scripts simultaneously on the same pins causes an OS-level conflict error and crashes the program.
+**```main.py```**: 
+- Runs the entire robot in a single unified scrip via Python threading
+- Servo sweep + ultrasonic radar display
+- Motor control with automatic obstacle detection
+- LCD distance readout
+- Combined into one file since GPIO pins can only be claimed by one process at a time. Running two scripts at the same time on the same pins causes an OS-level conflict and crashes the program.
 
-```motor_testing.py```: motor setup w/ L298N motor drivers & DC motors. defines forward, backward, and stop functions for each motor. Used for testing individual motor functionality.
+**```motor_testing.py```**: 
+- Motor setup w/ L298N motor drivers & DC motors
+- Defines forward, backward, and stop functions for each motor
+- Used for testing individual motor functionality
 
 ## Media
