@@ -1,5 +1,7 @@
 # autonomous-rover
 
+Other Contributors: Andrew Gao, Ayyazul Hassan, Kieu Vi O'Brien
+
 ## Overview
 
 - Autonomous rover prototype capable of autonomous object detection and sample collection
@@ -13,8 +15,7 @@
 - LCD Display w/ I2C interface (x1)
 - Servo Motor (x1)
 - Ultrasonic Sensor (x1)
-- 9V+ Battery
-- Jumper Wires
+- 9V+ Battery + Jumper Wires
 - Custom 3D printed chassis
 
 ## Features
