@@ -36,7 +36,7 @@ Other Contributors: Andrew Gao, Ayyazul Hassan, Kieu Vi O'Brien
 ## Files
 
 **```main.py```**: 
-- Runs the entire robot in a single unified scrip via Python threading
+- Runs the entire robot in a single unified script via Python threading
 - Servo sweep + ultrasonic radar display
 - Motor control with automatic obstacle detection
 - LCD distance readout
