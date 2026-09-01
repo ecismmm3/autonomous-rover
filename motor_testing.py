@@ -35,6 +35,7 @@ pwm_b1.start(0)
 pwm_a2.start(0)
 pwm_b2.start(0)
 
+# m1, m2: motor drivers, each with motors a and b
 
 def m1a_forward(speed=100):
     GPIO.output(IN1, GPIO.HIGH)
