@@ -9,44 +9,44 @@ import tty
 import termios
 import threading
 
-# ── Display environment ──────────────────────────────────────────────────────
+# DISPLAY
+
 os.environ['SDL_VIDEODRIVER'] = 'x11'
 os.environ['DISPLAY'] = ':0'
 
-# ── GPIO Setup ──────────────────────────────────────────────────────────────
 GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 
-# Ultrasonic
+# ultrasonic sensor setup
 TRIG = 23
 ECHO = 24
 GPIO.setup(TRIG, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
 
-# Servo
+# servo setup
 SERVO_PIN = 18
 GPIO.setup(SERVO_PIN, GPIO.OUT)
 servo_pwm = GPIO.PWM(SERVO_PIN, 50)
 servo_pwm.start(0)
 
-# Motors
+# motor pins
 ENA1, IN1, IN2 = 26, 6, 25
 ENB1, IN3, IN4 = 19, 16, 20
 ENA2, IN5, IN6 = 12, 17, 27
 ENB2, IN7, IN8 = 13, 22, 5
 
-for pin in [ENA1, IN1, IN2, ENB1, IN3, IN4,
-            ENA2, IN5, IN6, ENB2, IN7, IN8]:
+for pin in [ENA1, IN1, IN2, ENB1, IN3, IN4, ENA2, IN5, IN6, ENB2, IN7, IN8]:
     GPIO.setup(pin, GPIO.OUT)
 
 pwm_a1 = GPIO.PWM(ENA1, 1000)
 pwm_b1 = GPIO.PWM(ENB1, 1000)
 pwm_a2 = GPIO.PWM(ENA2, 1000)
 pwm_b2 = GPIO.PWM(ENB2, 1000)
+
 for pwm in [pwm_a1, pwm_b1, pwm_a2, pwm_b2]:
     pwm.start(0)
 
-# ── Constants ────────────────────────────────────────────────────────────────
+
 SPEED         = 75
 SAFE_DISTANCE = 20.0   # cm
 MIN_ANGLE     = 0.0
@@ -55,13 +55,13 @@ STEP          = 2.0
 SERVO_INTERVAL= 0.05
 running       = True
 
-# ── Shared State ─────────────────────────────────────────────────────────────
+
 distance      = 999.0
 distance_lock = threading.Lock()
 servo_pos     = 0.0
 servo_dir     = 1
 
-# ── Motor Functions ──────────────────────────────────────────────────────────
+
 def front_leftf(speed):
     GPIO.output(IN1, GPIO.HIGH); GPIO.output(IN2, GPIO.LOW)
     pwm_a1.ChangeDutyCycle(speed)
@@ -129,7 +129,8 @@ def turn_right():
     front_leftf(SPEED); front_rightb(SPEED)
     back_leftf(SPEED);  back_rightb(SPEED)
 
-# ── Ultrasonic Thread ────────────────────────────────────────────────────────
+# ultrasonic thread 
+
 def distance_loop():
     global distance
     while running:
@@ -156,7 +157,7 @@ def distance_loop():
 sensor_thread = threading.Thread(target=distance_loop, daemon=True)
 sensor_thread.start()
 
-# ── Servo Thread ─────────────────────────────────────────────────────────────
+# servo motor thread
 def servo_loop():
     global servo_pos, servo_dir
     while running:
@@ -174,7 +175,8 @@ def servo_loop():
 servo_thread = threading.Thread(target=servo_loop, daemon=True)
 servo_thread.start()
 
-# ── LCD Setup ────────────────────────────────────────────────────────────────
+# lcd
+
 I2C_ADDR      = 0x27
 bus           = smbus2.SMBus(1)
 LCD_CHR       = 1
@@ -222,7 +224,8 @@ lcd_init()
 lcd_print("System Ready", LCD_LINE_1)
 time.sleep(1)
 
-# ── Pygame Setup ─────────────────────────────────────────────────────────────
+# terrain mapper/visualizer
+
 pygame.init()
 WIDTH, HEIGHT = 800, 400
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -247,7 +250,8 @@ fade_surface.fill(BLACK)
 
 lcd_counter  = 0
 
-# ── Keyboard Thread ──────────────────────────────────────────────────────────
+# keyboard inputs
+
 def keyboard_loop():
     global running
     print("Drive Controller")
@@ -291,7 +295,8 @@ def keyboard_loop():
 kb_thread = threading.Thread(target=keyboard_loop, daemon=True)
 kb_thread.start()
 
-# ── Safety Monitor ───────────────────────────────────────────────────────────
+# auto braking
+
 def safety_loop():
     while running:
         with distance_lock:
@@ -303,7 +308,8 @@ def safety_loop():
 safety_thread = threading.Thread(target=safety_loop, daemon=True)
 safety_thread.start()
 
-# ── Main Radar Loop ───────────────────────────────────────────────────────────
+# radar loop
+
 try:
     while running:
         for event in pygame.event.get():
